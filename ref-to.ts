@@ -8,7 +8,7 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     wr: any;//WeakRef<Element> | undefined;
     doneProcessing = new WeakSet<RefTo>();
     a: string | undefined;
-    get myElement(){
+    get deref(){
         const element = this.wr.deref();
         if(!element){
             setTimeout(() => {
@@ -22,7 +22,10 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
         return element;
     }
     disconnectedCallback(){
-        this.myElement?.remove();
+        this.deref?.remove();
+    }
+    onPropChange(n: string, prop: PropDef, nv: any){
+        this.reactor.addToQueue(prop, nv);
     }
 }
 const onA = ({a, self}: RefTo) => {
@@ -30,11 +33,11 @@ const onA = ({a, self}: RefTo) => {
     self.wr = new WeakRef<Element>(newElement);
     for(const node of self.childNodes){
         if(node instanceof RefTo){
-            if(!node.myElement){
+            if(!node.deref){
                 const ph = document.createElement('place--holder');
                 newElement.appendChild(ph);
             }else{
-                newElement.appendChild(node.myElement);
+                newElement.appendChild(node.deref);
             }
         }else{
             newElement.appendChild(node.cloneNode(true));
@@ -49,7 +52,7 @@ const propDefMap: PropDefMap<RefTo> = {
     a: {
         type: String,
         stopReactionsIfFalsy: true,
-        async: true
+        async: true,
         dry: true
     }
 };
