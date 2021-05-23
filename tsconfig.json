@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module":"esnext",
+		"sourceMap": false,
+		"experimentalDecorators": false,
+		"newLine": "LF",
+		"strict": true,
+		"watch": true,
+		"lib": ["ESNext"],
+	},
+	"files": [
+		"p-d.ts",
+		"pdUtils.ts",
+	],
+	"exclude":[
+		"build",
+		"bower_components",
+		"node_modules"
+	]
+
+}

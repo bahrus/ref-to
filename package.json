@@ -2,6 +2,12 @@
   "name": "ref-to",
   "version": "0.0.0",
   "description": "",
+  "dependencies": {
+    "xtal-element": "0.0.400"
+  },
+  "devDependencies": {
+    "xtal-test": "0.0.50"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
