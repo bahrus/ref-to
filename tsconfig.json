@@ -7,11 +7,10 @@
 		"newLine": "LF",
 		"strict": true,
 		"watch": true,
-		"lib": ["ESNext"],
+		"lib": ["ESNext", "DOM"],
 	},
 	"files": [
-		"p-d.ts",
-		"pdUtils.ts",
+		"ref-to.ts"
 	],
 	"exclude":[
 		"build",
