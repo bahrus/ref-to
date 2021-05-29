@@ -77,6 +77,7 @@ const onA = ({a, self}: RefTo) => {
     }
     //TODO:  add mutation observer for additional ref-to direct children.
     self.dispatchEvent(new CustomEvent('element-created', {
+        bubbles: true,
         detail: {
             createdElement: newElement
         }
