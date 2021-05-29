@@ -1,13 +1,16 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 export class RefTo extends HTMLElement {
-    static is = 'ref-to';
-    self = this;
-    propActions = propActions;
-    reactor = new xc.Rx(this);
-    wr; //WeakRef<Element> | undefined;
-    placeHolderMap = new WeakMap();
-    a;
+    constructor() {
+        super(...arguments);
+        this.self = this;
+        this.propActions = propActions;
+        this.reactor = new xc.Rx(this);
+        this.placeHolderMap = new WeakMap();
+    }
     get deref() {
+        if (this.wr === undefined) {
+            onA(this);
+        }
         const element = this.wr.deref();
         if (!element) {
             setTimeout(() => {
@@ -30,6 +33,7 @@ export class RefTo extends HTMLElement {
         this.reactor.addToQueue(prop, nv);
     }
 }
+RefTo.is = 'ref-to';
 const onA = ({ a, self }) => {
     const newElement = document.createElement(a);
     self.wr = new WeakRef(newElement);

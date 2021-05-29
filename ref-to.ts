@@ -9,6 +9,9 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     placeHolderMap = new WeakMap<Element, Element>();
     a: string | undefined;
     get deref(){
+        if(this.wr === undefined){
+            onA(this);
+        }
         const element = this.wr.deref();
         if(!element){
             setTimeout(() => {
