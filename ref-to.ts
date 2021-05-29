@@ -5,17 +5,26 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     self = this;
     propActions = propActions;
     reactor: IReactor = new xc.Rx(this);
-    wr: any;//WeakRef<Element> | undefined;
+    //wr: any;//WeakRef<Element> | undefined;
+    ref: Element | undefined; //TODO, switch with weakref as advertised.
     placeHolderMap = new WeakMap<Element, Element>();
     a: string | undefined;
     get deref(){
-        if(this.wr === undefined){
-            onA(this);
+        //if(this.wr === undefined){
+        if(this.ref === undefined){
+            if(this.a !== undefined){
+                onA(this);
+            }else{
+                return undefined;
+            }
+            
         }
-        const element = this.wr.deref();
+        //const element = this.wr.deref();
+        const element = this.ref;//TODO:  use weakref
         if(!element){
             setTimeout(() => {
-                const test = this.wr.deref();
+                //const test = this.wr.deref(); //TODO: use weakref
+                const test = this.ref;
                 if(!test){
                     this.remove();
                 }
@@ -35,8 +44,9 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     }
 }
 const onA = ({a, self}: RefTo) => {
-    const newElement = document.createElement(a);
-    self.wr = new WeakRef<Element>(newElement);
+    const newElement = document.createElement(a!);
+    //self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
+    self.ref = newElement;
     const childNodes = Array.from(self.childNodes);
     for(const node of childNodes){
         if(node instanceof RefTo){

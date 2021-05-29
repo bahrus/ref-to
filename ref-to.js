@@ -8,13 +8,21 @@ export class RefTo extends HTMLElement {
         this.placeHolderMap = new WeakMap();
     }
     get deref() {
-        if (this.wr === undefined) {
-            onA(this);
+        //if(this.wr === undefined){
+        if (this.ref === undefined) {
+            if (this.a !== undefined) {
+                onA(this);
+            }
+            else {
+                return undefined;
+            }
         }
-        const element = this.wr.deref();
+        //const element = this.wr.deref();
+        const element = this.ref; //TODO:  use weakref
         if (!element) {
             setTimeout(() => {
-                const test = this.wr.deref();
+                //const test = this.wr.deref(); //TODO: use weakref
+                const test = this.ref;
                 if (!test) {
                     this.remove();
                 }
@@ -36,7 +44,8 @@ export class RefTo extends HTMLElement {
 RefTo.is = 'ref-to';
 const onA = ({ a, self }) => {
     const newElement = document.createElement(a);
-    self.wr = new WeakRef(newElement);
+    //self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
+    self.ref = newElement;
     const childNodes = Array.from(self.childNodes);
     for (const node of childNodes) {
         if (node instanceof RefTo) {
