@@ -43,6 +43,10 @@ export class RefTo extends HTMLElement {
 }
 RefTo.is = 'ref-to';
 const onA = ({ a, self }) => {
+    if (self.ref !== undefined) { //TODO: use weakref
+        if (self.ref.localName === a)
+            return;
+    }
     const newElement = document.createElement(a);
     //self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
     self.ref = newElement;

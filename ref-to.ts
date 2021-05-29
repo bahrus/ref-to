@@ -44,6 +44,9 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     }
 }
 const onA = ({a, self}: RefTo) => {
+    if(self.ref !== undefined){ //TODO: use weakref
+        if(self.ref.localName === a) return;
+    }
     const newElement = document.createElement(a!);
     //self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
     self.ref = newElement;
