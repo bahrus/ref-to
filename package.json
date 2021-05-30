@@ -1,6 +1,6 @@
 {
   "name": "ref-to",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "dependencies": {
     "xtal-element": "0.0.400"
