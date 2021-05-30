@@ -5,11 +5,12 @@ export class RefTo extends HTMLElement {
         this.self = this;
         this.propActions = propActions;
         this.reactor = new xc.Rx(this);
+        //ref: Element | undefined; //TODO, switch with weakref as advertised.
         this.placeHolderMap = new WeakMap();
     }
     get deref() {
-        //if(this.wr === undefined){
-        if (this.ref === undefined) {
+        if (this.wr === undefined) {
+            //if(this.ref === undefined){
             if (this.a !== undefined) {
                 onA(this);
             }
@@ -17,12 +18,14 @@ export class RefTo extends HTMLElement {
                 return undefined;
             }
         }
-        //const element = this.wr.deref();
-        const element = this.ref; //TODO:  use weakref
+        if (this.wr === undefined)
+            return;
+        const element = this.wr.deref();
+        //const element = this.ref;//TODO:  use weakref
         if (!element) {
             setTimeout(() => {
-                //const test = this.wr.deref(); //TODO: use weakref
-                const test = this.ref;
+                const test = this.wr?.deref(); //TODO: use weakref
+                //const test = this.ref;
                 if (!test) {
                     this.remove();
                 }
@@ -43,13 +46,17 @@ export class RefTo extends HTMLElement {
 }
 RefTo.is = 'ref-to';
 const onA = ({ a, self }) => {
-    if (self.ref !== undefined) { //TODO: use weakref
-        if (self.ref.localName === a)
+    // if(self.ref !== undefined){ //TODO: use weakref
+    //     if(self.ref.localName === a) return;
+    // }
+    if (self.wr !== undefined) {
+        const el = self.wr.deref();
+        if (el !== undefined && el.localName === a)
             return;
     }
     const newElement = document.createElement(a);
-    //self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
-    self.ref = newElement;
+    self.wr = new WeakRef(newElement); //TODO:  Use weakref
+    //self.ref = newElement;
     const childNodes = Array.from(self.childNodes);
     for (const node of childNodes) {
         if (node instanceof RefTo) {
