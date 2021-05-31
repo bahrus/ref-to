@@ -92,8 +92,11 @@ const onA = ({ a, self }) => {
         }
     }));
 };
+const onNewElement = ({ self, newRef }) => {
+    self.wr = new WeakRef(newRef);
+};
 const propActions = [
-    onA
+    onA, onNewElement
 ];
 const propDefMap = {
     a: {
@@ -101,6 +104,12 @@ const propDefMap = {
         stopReactionsIfFalsy: true,
         async: true,
         dry: true
+    },
+    newRef: {
+        type: Object,
+        stopReactionsIfFalsy: true,
+        async: true,
+        dry: true,
     }
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);

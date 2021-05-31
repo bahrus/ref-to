@@ -14,3 +14,13 @@ What ref-to does:
 3.  ref-to fires an event, 'element-created' and passes the element created in step 2 in the detail of the event.  detail.createdElement.
 4.  If the weak reference is dereferenced (discovered doing a get()), the ref-to element disappears.
 5.  If the ref-to element is removed from the DOM, so is the element it created.
+
+Alternative syntax:
+
+```html
+<ref-to id=myRefTo></ref-to>
+<script>
+var newElement = document.createElement('my-element');
+myRefTo.newRef = newElement;
+</script>
+```

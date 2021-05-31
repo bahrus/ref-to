@@ -8,6 +8,7 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
     wr: WeakRef<Element> | undefined;
     //ref: Element | undefined; //TODO, switch with weakref as advertised.
     placeHolderMap = new WeakMap<Element, Element>();
+    newRef: Element | undefined;
     a: string | undefined;
     get deref(){
         if(this.wr === undefined){
@@ -89,8 +90,12 @@ const onA = ({a, self}: RefTo) => {
     }));
 };
 
+const onNewElement = ({self, newRef}: RefTo) => {
+    self.wr = new WeakRef<Element>(newRef);
+};
+
 const propActions = [
-    onA
+    onA, onNewElement
 ] as PropAction[];
 const propDefMap: PropDefMap<RefTo> = {
     a: {
@@ -98,6 +103,12 @@ const propDefMap: PropDefMap<RefTo> = {
         stopReactionsIfFalsy: true,
         async: true,
         dry: true
+    },
+    newRef: {
+        type: Object,
+        stopReactionsIfFalsy: true,
+        async: true,
+        dry: true,
     }
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
