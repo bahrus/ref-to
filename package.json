@@ -3,10 +3,10 @@
   "version": "0.0.6",
   "description": "",
   "dependencies": {
-    "xtal-element": "0.0.400"
+    "xtal-element": "0.0.415"
   },
   "devDependencies": {
-    "xtal-test": "0.0.50"
+    "xtal-test": "0.0.51"
   },
   "main": "index.js",
   "scripts": {
