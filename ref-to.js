@@ -2,7 +2,13 @@ import { xc } from 'xtal-element/lib/XtalCore.js';
 export class RefTo extends HTMLElement {
     constructor() {
         super(...arguments);
+        /**
+         * @private
+         */
         this.self = this;
+        /**
+         * @private
+         */
         this.propActions = propActions;
         this.reactor = new xc.Rx(this);
         //ref: Element | undefined; //TODO, switch with weakref as advertised.
@@ -63,7 +69,7 @@ const onA = ({ a, self }) => {
             if (!node.deref) {
                 const ph = document.createElement('place--holder');
                 self.placeHolderMap.set(newElement, ph);
-                node.addEventListener('element-created', e => {
+                node.addEventListener('deref-changed', e => {
                     const createdElement = e.detail.createdElement;
                     if (self.placeHolderMap.has(createdElement)) {
                         const ph = self.placeHolderMap.get(createdElement);
@@ -85,7 +91,7 @@ const onA = ({ a, self }) => {
         }
     }
     //TODO:  add mutation observer for additional ref-to direct children.
-    self.dispatchEvent(new CustomEvent('element-created', {
+    self.dispatchEvent(new CustomEvent('deref-changed', {
         bubbles: true,
         detail: {
             createdElement: newElement
@@ -104,6 +110,10 @@ const propDefMap = {
         stopReactionsIfFalsy: true,
         async: true,
         dry: true
+    },
+    an: {
+        type: String,
+        echoTo: 'a'
     },
     newRef: {
         type: Object,

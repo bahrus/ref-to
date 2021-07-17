@@ -1,15 +1,22 @@
 import {ReactiveSurface, xc, IReactor, PropAction, PropDef, PropDefMap} from 'xtal-element/lib/XtalCore.js';
+import {RefToProps} from './types.d.js';
 
 export class RefTo extends HTMLElement implements ReactiveSurface{
     static is = 'ref-to';
+    /**
+     * @private
+     */
     self = this;
+    /**
+     * @private
+     */
     propActions = propActions;
     reactor: IReactor = new xc.Rx(this);
     wr: WeakRef<Element> | undefined;
     //ref: Element | undefined; //TODO, switch with weakref as advertised.
     placeHolderMap = new WeakMap<Element, Element>();
     newRef: Element | undefined;
-    a: string | undefined;
+    
     get deref(){
         if(this.wr === undefined){
         //if(this.ref === undefined){
@@ -45,6 +52,8 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
         this.reactor.addToQueue(prop, nv);
     }
 }
+export interface RefTo extends RefToProps{}
+
 const onA = ({a, self}: RefTo) => {
     // if(self.ref !== undefined){ //TODO: use weakref
     //     if(self.ref.localName === a) return;
@@ -62,7 +71,7 @@ const onA = ({a, self}: RefTo) => {
             if(!node.deref){
                 const ph = document.createElement('place--holder');
                 self.placeHolderMap.set(newElement, ph);
-                node.addEventListener('element-created', e => {
+                node.addEventListener('deref-changed', e => {
                     const createdElement = (<any>e).detail.createdElement;
                     if(self.placeHolderMap.has(createdElement)){
                         const ph = self.placeHolderMap.get(createdElement);
@@ -82,7 +91,7 @@ const onA = ({a, self}: RefTo) => {
         
     }
     //TODO:  add mutation observer for additional ref-to direct children.
-    self.dispatchEvent(new CustomEvent('element-created', {
+    self.dispatchEvent(new CustomEvent('deref-changed', {
         bubbles: true,
         detail: {
             createdElement: newElement
@@ -91,7 +100,7 @@ const onA = ({a, self}: RefTo) => {
 };
 
 const onNewElement = ({self, newRef}: RefTo) => {
-    self.wr = new WeakRef<Element>(newRef);
+    self.wr = new WeakRef<Element>(newRef!);
 };
 
 const propActions = [
@@ -103,6 +112,10 @@ const propDefMap: PropDefMap<RefTo> = {
         stopReactionsIfFalsy: true,
         async: true,
         dry: true
+    },
+    an:{
+        type: String,
+        echoTo: 'a'
     },
     newRef: {
         type: Object,
