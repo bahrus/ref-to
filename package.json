@@ -1,6 +1,6 @@
 {
   "name": "ref-to",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "ref-to is a web component that dynamically generates another web component, that it stays connect with.",
   "keywords": [
     "web-components",
