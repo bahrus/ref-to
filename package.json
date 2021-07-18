@@ -1,17 +1,37 @@
 {
   "name": "ref-to",
   "version": "0.0.6",
-  "description": "",
+  "description": "ref-to is a web component that dynamically generates another web component, that it stays connect with.",
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "weak-map"
+  ],
   "dependencies": {
-    "xtal-element": "0.0.415"
+    "xtal-element": "0.0.416"
   },
   "devDependencies": {
-    "xtal-test": "0.0.51"
+    "@skypack/package-check": "0.2.2",
+    "xtal-test": "0.0.51",
+    "@custom-elements-manifest/analyzer": "0.4.12"
   },
-  "main": "index.js",
+  "main": "ref-to.js",
+  "module": "ref-to.js",
+  "types": "types.d.ts",
+  "exports": {
+    ".": "./ref-to.js",
+    "./ref-to.js": "./ref-to.js"
+  },
+  "files": [
+    "ref*.*",
+    "types.d.ts",
+    "custom-elements.json"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node node_modules/xtal-test/serve.js"
+    "serve": "node node_modules/xtal-test/serve.js",
+    "package-check": "package-check",
+    "doc": "custom-elements-manifest analyze"
   },
   "repository": {
     "type": "git",

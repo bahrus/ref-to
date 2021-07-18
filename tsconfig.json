@@ -1,13 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
-		"module":"esnext",
+		"target": "ESNext",
+		"module":"ESNext",
 		"sourceMap": false,
 		"experimentalDecorators": false,
 		"newLine": "LF",
 		"strict": true,
-		"watch": true,
-		"lib": ["ESNext", "DOM"],
+		"watch": true
 	},
 	"files": [
 		"ref-to.ts"

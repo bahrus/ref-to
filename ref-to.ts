@@ -1,6 +1,10 @@
 import {ReactiveSurface, xc, IReactor, PropAction, PropDef, PropDefMap} from 'xtal-element/lib/XtalCore.js';
 import {RefToProps} from './types.d.js';
 
+/**
+ * @element ref-to
+ * @tag ref-to
+ */
 export class RefTo extends HTMLElement implements ReactiveSurface{
     static is = 'ref-to';
     /**
@@ -127,3 +131,9 @@ const propDefMap: PropDefMap<RefTo> = {
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(RefTo, slicedPropDefs, 'onPropChange');
 xc.define(RefTo);
+
+declare global {
+    interface HTMLElementTagNameMap {
+        'ref-to': RefTo;
+    }
+}

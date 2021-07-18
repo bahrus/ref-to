@@ -1,19 +1,23 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
+/**
+ * @element ref-to
+ * @tag ref-to
+ */
 export class RefTo extends HTMLElement {
-    constructor() {
-        super(...arguments);
-        /**
-         * @private
-         */
-        this.self = this;
-        /**
-         * @private
-         */
-        this.propActions = propActions;
-        this.reactor = new xc.Rx(this);
-        //ref: Element | undefined; //TODO, switch with weakref as advertised.
-        this.placeHolderMap = new WeakMap();
-    }
+    static is = 'ref-to';
+    /**
+     * @private
+     */
+    self = this;
+    /**
+     * @private
+     */
+    propActions = propActions;
+    reactor = new xc.Rx(this);
+    wr;
+    //ref: Element | undefined; //TODO, switch with weakref as advertised.
+    placeHolderMap = new WeakMap();
+    newRef;
     get deref() {
         if (this.wr === undefined) {
             //if(this.ref === undefined){
@@ -50,7 +54,6 @@ export class RefTo extends HTMLElement {
         this.reactor.addToQueue(prop, nv);
     }
 }
-RefTo.is = 'ref-to';
 const onA = ({ a, self }) => {
     // if(self.ref !== undefined){ //TODO: use weakref
     //     if(self.ref.localName === a) return;
