@@ -42,5 +42,6 @@
   "bugs": {
     "url": "https://github.com/bahrus/ref-to/issues"
   },
-  "homepage": "https://github.com/bahrus/ref-to#readme"
+  "homepage": "https://github.com/bahrus/ref-to#readme",
+  "customElements": "custom-elements.json"
 }

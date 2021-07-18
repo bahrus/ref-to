@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "ref-to.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "RefTo",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'ref-to'"
+            },
+            {
+              "kind": "field",
+              "name": "self",
+              "default": "this",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "propActions",
+              "default": "[\n    onA, onNewElement\n]",
+              "privacy": "private",
+              "type": {
+                "text": "array"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "reactor",
+              "default": "new xc.Rx(this)"
+            },
+            {
+              "kind": "field",
+              "name": "wr"
+            },
+            {
+              "kind": "field",
+              "name": "placeHolderMap",
+              "default": "new WeakMap()"
+            },
+            {
+              "kind": "field",
+              "name": "newRef"
+            },
+            {
+              "kind": "field",
+              "name": "deref"
+            },
+            {
+              "kind": "method",
+              "name": "onPropChange",
+              "parameters": [
+                {
+                  "name": "n"
+                },
+                {
+                  "name": "prop"
+                },
+                {
+                  "name": "nv"
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "ref-to",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RefTo",
+          "declaration": {
+            "name": "RefTo",
+            "module": "ref-to.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "ref-to.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "RefTo",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'ref-to'"
+            },
+            {
+              "kind": "field",
+              "name": "self",
+              "default": "this",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "propActions",
+              "default": "[\r\n    onA, onNewElement\r\n]",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "reactor",
+              "type": {
+                "text": "IReactor"
+              },
+              "default": "new xc.Rx(this)"
+            },
+            {
+              "kind": "field",
+              "name": "wr",
+              "type": {
+                "text": "WeakRef<Element> | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "placeHolderMap",
+              "default": "new WeakMap<Element, Element>()"
+            },
+            {
+              "kind": "field",
+              "name": "newRef",
+              "type": {
+                "text": "Element | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "deref"
+            },
+            {
+              "kind": "method",
+              "name": "onPropChange",
+              "parameters": [
+                {
+                  "name": "n",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "prop",
+                  "type": {
+                    "text": "PropDef"
+                  }
+                },
+                {
+                  "name": "nv",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "ref-to",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RefTo",
+          "declaration": {
+            "name": "RefTo",
+            "module": "ref-to.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "types.d.ts",
+      "declarations": [],
+      "exports": []
+    }
+  ]
+}
