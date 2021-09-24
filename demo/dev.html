@@ -8,6 +8,8 @@
 </head>
 <body>
     <ref-to a=my-grid id=myRefTo></ref-to>
+
+    <ref-to a=my-chart insert-adjacent=afterend></ref-to>
     <script type=importmap>{
         "imports": {
             "xtal-element/": "../node_modules/xtal-element/",
@@ -15,7 +17,7 @@
         }
     }</script>
     <script type=module>
-        import '../ref-to.js';
+        import '../ref-to2.js';
     </script>
 </body>
 </html>

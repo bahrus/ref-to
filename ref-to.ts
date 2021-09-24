@@ -1,43 +1,25 @@
-import {ReactiveSurface, xc, IReactor, PropAction, PropDef, PropDefMap} from 'xtal-element/lib/XtalCore.js';
-import {RefToProps} from './types.d.js';
+import {XE} from 'xtal-element/src/XE.js';
+import {RefToProps, RefToActions} from './types';
 
 /**
  * @element ref-to
  * @tag ref-to
  */
-export class RefTo extends HTMLElement implements ReactiveSurface{
-    static is = 'ref-to';
-    /**
-     * @private
-     */
-    self = this;
-    /**
-     * @private
-     */
-    propActions = propActions;
-    reactor: IReactor = new xc.Rx(this);
-    wr: WeakRef<Element> | undefined;
-    //ref: Element | undefined; //TODO, switch with weakref as advertised.
-    placeHolderMap = new WeakMap<Element, Element>();
-    newRef: Element | undefined;
-    
+export class RefToCore extends HTMLElement implements RefToActions{
+
     get deref(){
-        if(this.wr === undefined){
-        //if(this.ref === undefined){
+        if(this.weakRef === undefined){
             if(this.a !== undefined){
-                onA(this);
+                this.onA(this);
             }else{
-                return undefined;
+                return;
             }
-            
         }
-        if(this.wr === undefined) return;
-        const element = this.wr.deref();
-        //const element = this.ref;//TODO:  use weakref
+        if(this.weakRef === undefined) return;
+        const element = this.weakRef.deref();
         if(!element){
             setTimeout(() => {
-                const test = this.wr?.deref(); //TODO: use weakref
-                //const test = this.ref;
+                const test = this.weakRef?.deref();
                 if(!test){
                     this.remove();
                 }
@@ -46,94 +28,97 @@ export class RefTo extends HTMLElement implements ReactiveSurface{
         }
         return element;
     }
-    connectedCallback(){
-        xc.mergeProps(this, slicedPropDefs);
+    placeHolderMap = new WeakMap<Element, Element>();
+    onA({a}: this){
+        if(this.weakRef !== undefined){
+            const el = this.weakRef.deref();
+            if(el !== undefined && el.localName === a) return;
+        }
+        const newElement = document.createElement(a!);
+        this.weakRef = new WeakRef<Element>(newElement);
+        const childNodes = Array.from(this.childNodes);
+        for(const node of childNodes){
+            if(node instanceof RefToCore){
+                if(!node.deref){
+                    const ph = document.createElement('place--holder');
+                    this.placeHolderMap.set(newElement, ph);
+                    node.addEventListener('deref-changed', e => {
+                        const createdElement = (<any>e).detail.createdElement;
+                        if(this.placeHolderMap.has(createdElement)){
+                            const ph = this.placeHolderMap.get(createdElement);
+                            ph!.insertAdjacentElement('afterend', createdElement);
+                            ph!.remove();
+                        }else{
+                            throw 'NotImplementedYet'; // extra dynamic elements?
+                        }
+                    }, {once: true});
+                    newElement.appendChild(ph);
+                }else{
+                    newElement.appendChild(node.deref);
+                }
+            }else{
+                newElement.appendChild(node.cloneNode(true));
+            }
+            
+        }
+        self.dispatchEvent(new CustomEvent('deref-changed', {
+            bubbles: true,
+            detail: {
+                createdElement: newElement
+            }
+        }));
+    }
+    onNewElement({newRef}: this){
+        this.weakRef = new WeakRef<Element>(newRef!);
+    }
+    doInsertAdjacent({weakRef, insertAdjacent}: this){
+        const el = this.deref;
+        if(el === undefined) return;
+        this.insertAdjacentElement(insertAdjacent as InsertPosition, el);
     }
     disconnectedCallback(){
         this.deref?.remove();
     }
-    onPropChange(n: string, prop: PropDef, nv: any){
-        this.reactor.addToQueue(prop, nv);
-    }
 }
-export interface RefTo extends RefToProps{}
 
-const onA = ({a, self}: RefTo) => {
-    // if(self.ref !== undefined){ //TODO: use weakref
-    //     if(self.ref.localName === a) return;
-    // }
-    if(self.wr !== undefined){
-        const el = self.wr.deref();
-        if(el !== undefined && el.localName === a) return;
-    }
-    const newElement = document.createElement(a!);
-    self.wr = new WeakRef<Element>(newElement); //TODO:  Use weakref
-    //self.ref = newElement;
-    const childNodes = Array.from(self.childNodes);
-    for(const node of childNodes){
-        if(node instanceof RefTo){
-            if(!node.deref){
-                const ph = document.createElement('place--holder');
-                self.placeHolderMap.set(newElement, ph);
-                node.addEventListener('deref-changed', e => {
-                    const createdElement = (<any>e).detail.createdElement;
-                    if(self.placeHolderMap.has(createdElement)){
-                        const ph = self.placeHolderMap.get(createdElement);
-                        ph!.insertAdjacentElement('afterend', createdElement);
-                        ph!.remove();
-                    }else{
-                        throw 'NotImplementedYet'; // extra dynamic elements?
-                    }
-                }, {once: true});
-                newElement.appendChild(ph);
-            }else{
-                newElement.appendChild(node.deref);
+export interface RefToCore extends RefToProps{}
+
+const xe = new XE<RefToProps, RefToActions>({
+    config:{
+        tagName: 'ref-to',
+        propDefaults:{
+            a: '',
+            insertAdjacent: '',
+        },
+        propInfo:{
+            an:{
+                notify:{
+                    echoTo: 'a'
+                }
             }
-        }else{
-            newElement.appendChild(node.cloneNode(true));
+        },
+        actions:{
+            onA:{
+                ifAllOf: ['a']
+            },
+            onNewElement:{
+                ifAllOf: ['newRef']
+            },
+            doInsertAdjacent:{
+                ifAllOf: ['weakRef', 'insertAdjacent']
+            }
+        },
+        style:{
+            display:'none'
         }
-        
-    }
-    //TODO:  add mutation observer for additional ref-to direct children.
-    self.dispatchEvent(new CustomEvent('deref-changed', {
-        bubbles: true,
-        detail: {
-            createdElement: newElement
-        }
-    }));
-};
-
-const onNewElement = ({self, newRef}: RefTo) => {
-    self.wr = new WeakRef<Element>(newRef!);
-};
-
-const propActions = [
-    onA, onNewElement
-] as PropAction[];
-const propDefMap: PropDefMap<RefTo> = {
-    a: {
-        type: String,
-        stopReactionsIfFalsy: true,
-        async: true,
-        dry: true
     },
-    an:{
-        type: String,
-        echoTo: 'a'
-    },
-    newRef: {
-        type: Object,
-        stopReactionsIfFalsy: true,
-        async: true,
-        dry: true,
-    }
-};
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps(RefTo, slicedPropDefs, 'onPropChange');
-xc.define(RefTo);
+    superclass:RefToCore,
+});
+
+export const RefTo = xe.classDef!;
 
 declare global {
     interface HTMLElementTagNameMap {
-        'ref-to': RefTo;
+        'ref-to': RefToCore;
     }
 }

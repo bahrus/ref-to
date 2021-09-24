@@ -8,12 +8,12 @@
     "weak-map"
   ],
   "dependencies": {
-    "xtal-element": "0.0.416"
+    "xtal-element": "0.0.442"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
     "xtal-test": "0.0.51",
-    "@custom-elements-manifest/analyzer": "0.4.12"
+    "@custom-elements-manifest/analyzer": "0.5.3"
   },
   "main": "ref-to.js",
   "module": "ref-to.js",
